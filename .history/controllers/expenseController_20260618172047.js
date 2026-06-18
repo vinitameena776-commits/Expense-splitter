@@ -104,7 +104,13 @@ const addExpense = async (req, res) => {
       }));
     }
 
-const expense = await Expense.create({
+    const expense = await Expense.create({
+      await logActivity(
+      groupId,
+      req.userId,
+      'expense_added',
+      `added expense "${description}" of ₹${amount}`
+    );
       groupId,
       description: description.trim(),
       amount,
@@ -114,13 +120,6 @@ const expense = await Expense.create({
       paidBy: req.userId,
       splitAmong: splits
     });
-
-    await logActivity(
-      groupId,
-      req.userId,
-      'expense_added',
-      `added expense "${description}" of ₹${amount}`
-    );
 
     const populatedExpense = await Expense.findById(expense._id)
       .populate('paidBy', 'name email')

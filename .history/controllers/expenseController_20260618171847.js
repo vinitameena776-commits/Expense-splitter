@@ -1,4 +1,4 @@
-const { logActivity } = require('./activityController');
+
 const Expense = require('../models/Expense');
 const Group = require('../models/Group');
 const {
@@ -104,7 +104,7 @@ const addExpense = async (req, res) => {
       }));
     }
 
-const expense = await Expense.create({
+    const expense = await Expense.create({
       groupId,
       description: description.trim(),
       amount,
@@ -114,13 +114,6 @@ const expense = await Expense.create({
       paidBy: req.userId,
       splitAmong: splits
     });
-
-    await logActivity(
-      groupId,
-      req.userId,
-      'expense_added',
-      `added expense "${description}" of ₹${amount}`
-    );
 
     const populatedExpense = await Expense.findById(expense._id)
       .populate('paidBy', 'name email')
@@ -331,12 +324,6 @@ const deleteExpense = async (req, res) => {
         'Only the person who added this expense can delete it');
     }
 
-    await logActivity(
-      expense.groupId,
-      req.userId,
-      'expense_deleted',
-      `deleted expense "${expense.description}"`
-    );
     await Expense.findByIdAndDelete(expenseId);
 
     sendResponse(res, 200, 'Expense deleted successfully');

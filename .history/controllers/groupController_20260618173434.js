@@ -52,6 +52,13 @@ const createGroup = async (req, res) => {
   }
 };
 
+await logActivity(
+      group._id,
+      req.userId,
+      'group_created',
+      `created the group "${name}"`
+    );
+
 // JOIN GROUP
 const joinGroup = async (req, res) => {
   try {

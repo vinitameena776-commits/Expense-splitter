@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Expense Splitter</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dashboard-body">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">💰 Expense Splitter</div>
+    <div class="navbar-user">
+      <span id="userName">Loading...</span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="page-header">
+      <h2>My Groups</h2>
+      <button class="btn btn-create" onclick="openModal('createModal')">
+        + Create Group
+      </button>
+    </div>
+
+    <button 
+      class="btn btn-secondary" 
+      style="width:auto; padding:10px 20px; margin-bottom:20px"
+      onclick="openModal('joinModal')"
+    >
+      Join Group with Code
+    </button>
+
+    <div id="groupsContainer">
+      <div class="loading">Loading your groups...</div>
+    </div>
+  </div>
+
+  <!-- Create Group Modal -->
+  <div class="modal-overlay" id="createModal">
+    <div class="modal">
+      <h3>Create New Group</h3>
+      <div class="error-msg" id="createError"></div>
+      <div class="form-group">
+        <label>Group Name</label>
+        <input type="text" id="groupName" placeholder="e.g. Goa Trip 2024"/>
+      </div>
+      <div class="form-group">
+        <label>Description (optional)</label>
+        <input type="text" id="groupDesc" placeholder="e.g. Trip expenses"/>
+      </div>
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeModal('createModal')">
+          Cancel
+        </button>
+        <button class="btn" onclick="createGroup()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Join Group Modal -->
+  <div class="modal-overlay" id="joinModal">
+    <div class="modal">
+      <h3>Join a Group</h3>
+      <div class="error-msg" id="joinError"></div>
+      <div class="form-group">
+        <label>Invite Code</label>
+        <input 
+          type="text" 
+          id="inviteCode" 
+          placeholder="e.g. GRP-NICX4"
+          style="text-transform:uppercase"
+        />
+      </div>
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" onclick="closeModal('joinModal')">
+          Cancel
+        </button>
+        <button class="btn" onclick="joinGroup()">Join</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

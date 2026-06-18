@@ -36,13 +36,6 @@ const createGroup = async (req, res) => {
       .populate('members', 'name email')
       .populate('createdBy', 'name email');
 
-    await logActivity(
-      group._id,
-      req.userId,
-      'group_created',
-      `created the group "${name}"`
-    );
-
     sendResponse(res, 201, 'Group created successfully', {
       group: populatedGroup
     });
@@ -51,6 +44,13 @@ const createGroup = async (req, res) => {
     sendResponse(res, 500, error.message);
   }
 };
+
+await logActivity(
+      group._id,
+      req.userId,
+      'group_created',
+      `created the group "${name}"`
+    );
 
 // JOIN GROUP
 const joinGroup = async (req, res) => {
