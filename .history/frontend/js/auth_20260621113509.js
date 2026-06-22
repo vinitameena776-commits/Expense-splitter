@@ -103,5 +103,5 @@ if (window.location.pathname.includes('login') ||
     window.location.pathname.includes('register')) {
   //if (getToken()) {
     //window.location.href = '/frontend/pages/dashboard.html';
-  //}
+  }
 }

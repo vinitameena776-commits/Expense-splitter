@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register — Expense Splitter</title>
+  <title>Login — Expense Splitter</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="auth-body">
@@ -17,17 +17,12 @@
       </div>
 
       <div class="auth-heading">
-        <h2>Create account</h2>
-        <p>Start your shared ledger</p>
+        <h2>Welcome back</h2>
+        <p>Login to your ledger</p>
       </div>
 
       <div class="alert alert-error" id="errorMsg"></div>
       <div class="alert alert-success" id="successMsg"></div>
-
-      <div class="field">
-        <label>Full Name</label>
-        <input type="text" id="name" placeholder="Your full name" />
-      </div>
 
       <div class="field">
         <label>Email Address</label>
@@ -36,13 +31,13 @@
 
       <div class="field">
         <label>Password</label>
-        <input type="password" id="password" placeholder="Minimum 6 characters" />
+        <input type="password" id="password" placeholder="Enter your password" />
       </div>
 
-      <button class="btn" id="registerBtn" onclick="register()">Create Account</button>
+      <button class="btn" id="loginBtn" onclick="login()">Login</button>
 
       <div class="auth-switch">
-        Already have an account? <a href="login.html">Login</a>
+        Don't have an account? <a href="register.html">Create one</a>
       </div>
 
     </div>

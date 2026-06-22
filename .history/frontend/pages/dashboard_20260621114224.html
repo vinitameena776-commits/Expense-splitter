@@ -22,69 +22,21 @@
     </div>
   </nav>
 
- <div class="shell">
-
-  <!-- Welcome Banner -->
-  <div class="hero-banner">
-    <div class="hero-content">
-      <h1>
-        👋 Welcome Back,
-        <span id="heroName">User</span>
-      </h1>
-
-      <p>
-        Track expenses, split bills fairly and settle balances effortlessly.
-      </p>
-    </div>
-
-    <div class="hero-icon">
-      💰
-    </div>
-  </div>
-
-  <!-- Stats Cards -->
- <div class="stats-grid">
-
-  <div class="stat-card">
-    <h4>Total Groups</h4>
-    <p id="totalGroups">0</p>
-  </div>
-
-  <div class="stat-card">
-    <h4>Total Expenses</h4>
-    <p id="totalExpenses">₹0</p>
-  </div>
-
-  <div class="stat-card">
-    <h4>You Owe</h4>
-    <p id="youOwe">₹0</p>
-  </div>
-
-  <div class="stat-card">
-    <h4>You Are Owed</h4>
-    <p id="youAreOwed">₹0</p>
-  </div>
-
-</div>
-
-  <div class="shell-header">
+  <div class="shell">
+    <div class="shell-header">
       <div>
         <span class="eyebrow">Your ledger</span>
         <h2>My Groups</h2>
       </div>
-
       <div class="header-actions">
-        <button class="btn btn-ghost btn-small"
-                onclick="openModal('joinModal')">
+        <button class="btn btn-ghost btn-small" onclick="openModal('joinModal')">
           Join with code
         </button>
-
-        <button class="btn btn-small"
-                onclick="openModal('createModal')">
+        <button class="btn btn-small" onclick="openModal('createModal')">
           + Create Group
         </button>
       </div>
-  </div>
+    </div>
 
     <div id="groupsContainer">
       <div class="groups-grid">

@@ -84,8 +84,6 @@ const loadGroups = async () => {
     }
 
     const groups = data.data.groups;
-    document.getElementById('totalGroups').textContent =
-  groups.length;
 
     if (groups.length === 0) {
       document.getElementById('groupsContainer').innerHTML = `

@@ -16,21 +16,9 @@ const getInitials = (name) => {
 };
 
 const user = getUser();
-
 if (user) {
-
-  document.getElementById('userName').textContent =
-    user.name;
-
-  document.getElementById('userAvatar').textContent =
-    getInitials(user.name);
-
-  const heroName =
-    document.getElementById('heroName');
-
-  if(heroName){
-    heroName.textContent = user.name;
-  }
+  document.getElementById('userName').textContent = user.name;
+  document.getElementById('userAvatar').textContent = getInitials(user.name);
 }
 
 const logout = () => {
@@ -84,8 +72,6 @@ const loadGroups = async () => {
     }
 
     const groups = data.data.groups;
-    document.getElementById('totalGroups').textContent =
-  groups.length;
 
     if (groups.length === 0) {
       document.getElementById('groupsContainer').innerHTML = `
