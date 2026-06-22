@@ -75,7 +75,7 @@ const loadGroups = async () => {
 
     if (!response.ok) {
 if (response.status === 401) {
-  window.location.href = './login.html';
+  window.location.href = '/frontend/pages/login.html';
   return;
 }
       document.getElementById('groupsContainer').innerHTML =

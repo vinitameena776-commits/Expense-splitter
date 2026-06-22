@@ -74,10 +74,10 @@ const loadGroups = async () => {
     const data = await response.json();
 
     if (!response.ok) {
-if (response.status === 401) {
-  window.location.href = './login.html';
-  return;
-}
+      if (response.status === 401) {
+        window.location.href = '/frontend/pages/login.html';
+        return;
+      }
       document.getElementById('groupsContainer').innerHTML =
         '<p style="color:var(--ink-soft)">Failed to load groups.</p>';
       return;
