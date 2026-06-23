@@ -73,64 +73,23 @@
 
   </div>
 
-<!-- Add Expense Modal -->
-<!-- Add Expense Modal -->
-<div class="modal-overlay" id="addExpenseModal">
-  <div class="modal">
-    <h3>Add expense</h3>
-    <div class="alert alert-error" id="expenseError"></div>
+  <!-- Add Expense Modal -->
+  <div class="modal-overlay" id="addExpenseModal">
+    <div class="modal">
+      <h3>Add expense</h3>
+      <div class="alert alert-error" id="expenseError"></div>
 
-    <div class="field">
-      <label>Description</label>
-      <input type="text" id="expenseDesc" placeholder="e.g. Dinner at restaurant" />
-    </div>
+      <div class="field">
+        <label>Description</label>
+        <input type="text" id="expenseDesc" placeholder="e.g. Dinner at restaurant" />
 
-    <div class="field">
-      <label>Amount (₹)</label>
-      <input type="number" id="expenseAmount" placeholder="e.g. 1200" />
-    </div>
 
-    <div class="field">
-      <label>Category</label>
-      <select id="expenseCategory">
-        <option value="food">Food</option>
-        <option value="travel">Travel</option>
-        <option value="accommodation">Accommodation</option>
-        <option value="utilities">Utilities</option>
-        <option value="entertainment">Entertainment</option>
-        <option value="other">Other</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>Split Type</label>
-      <select id="splitType" onchange="handleSplitTypeChange()">
-        <option value="equal">Equal — split equally among all members</option>
-        <option value="exact">Exact — enter amount per person</option>
-        <option value="percentage">Percentage — enter % per person</option>
-      </select>
-    </div>
-
-    <div id="customSplitSection" style="display:none">
-      <div style="background:var(--cream-deep); border-radius:12px; padding:16px; margin-bottom:18px;">
-        <p style="font-size:13px; color:var(--ink-soft); margin-bottom:12px;" id="splitInstructions"></p>
-        <div id="customSplitFields"></div>
-        <p style="font-size:12px; color:var(--coral); margin-top:8px;" id="splitTotal"></p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal('addExpenseModal')">Cancel</button>
+        <button class="btn" id="addExpenseBtn" onclick="addExpense()">Add</button>
       </div>
     </div>
-
-    <div class="field">
-      <label>Notes (optional)</label>
-      <input type="text" id="expenseNotes" placeholder="Any additional notes" />
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('addExpenseModal')">Cancel</button>
-      <button class="btn" id="addExpenseBtn" onclick="addExpense()">Add</button>
-    </div>
-
   </div>
-</div>
 
   <div class="toast-stack" id="toastStack"></div>
 

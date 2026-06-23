@@ -4,14 +4,14 @@ const getToken = () => localStorage.getItem('token');
 const getUser = () => JSON.parse(localStorage.getItem('user') || 'null');
 
 if (!getToken()) {
-  window.location.href = '/frontend/pages/login.html';
+ window.location.href = './login.html';
 }
 
 const urlParams = new URLSearchParams(window.location.search);
 const groupId = urlParams.get('id');
 
 if (!groupId) {
-  window.location.href = '/frontend/pages/dashboard.html';
+  window.location.href = './dashboard.html';
 }
 
 const getInitials = (name) => {
@@ -37,25 +37,14 @@ if (user) {
   document.getElementById('userAvatar').textContent = getInitials(user.name);
 }
 
-// Store group members for split UI
-let groupMembers = [];
-
 const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
-  window.location.href = '/frontend/pages/login.html';
+  window.location.href = './login.html';
 };
 
 const openModal = (modalId) => document.getElementById(modalId).classList.add('active');
-const closeModal = (modalId) => {
-  document.getElementById(modalId).classList.remove('active');
-  // Reset split type on close
-  const splitType = document.getElementById('splitType');
-  if (splitType) {
-    splitType.value = 'equal';
-    handleSplitTypeChange();
-  }
-};
+const closeModal = (modalId) => document.getElementById(modalId).classList.remove('active');
 
 const showToast = (message, type = 'success') => {
   const stack = document.getElementById('toastStack');
@@ -72,98 +61,13 @@ const showToast = (message, type = 'success') => {
 const switchTab = (tab, evt) => {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   evt.target.classList.add('active');
+
   document.getElementById('expensesTab').style.display = tab === 'expenses' ? 'block' : 'none';
   document.getElementById('balancesTab').style.display = tab === 'balances' ? 'block' : 'none';
   document.getElementById('activityTab').style.display = tab === 'activity' ? 'block' : 'none';
+
   if (tab === 'balances') loadBalances();
   if (tab === 'activity') loadActivity();
-};
-
-// Handle split type UI change
-const handleSplitTypeChange = () => {
-  const splitType = document.getElementById('splitType').value;
-  const customSection = document.getElementById('customSplitSection');
-  const instructions = document.getElementById('splitInstructions');
-  const fieldsContainer = document.getElementById('customSplitFields');
-  const totalEl = document.getElementById('splitTotal');
-  const amountInput = document.getElementById('expenseAmount');
-  const totalAmount = parseFloat(amountInput?.value) || 0;
-
-  if (splitType === 'equal') {
-    customSection.style.display = 'none';
-    return;
-  }
-
-  customSection.style.display = 'block';
-
-  if (splitType === 'exact') {
-    instructions.textContent = `Enter exact amount each person owes (must add up to ₹${totalAmount || '...'})`;
-    fieldsContainer.innerHTML = groupMembers.map(member => `
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-        <span class="avatar" style="flex-shrink:0">${getInitials(member.name)}</span>
-        <span style="flex:1; font-size:14px; font-weight:500">${member.name}</span>
-        <input
-          type="number"
-          placeholder="₹0"
-          data-member-id="${member._id}"
-          data-split-input="exact"
-          style="width:90px; padding:8px 12px; border:1.5px solid var(--line); border-radius:8px; font-size:14px; outline:none; text-align:right; background:var(--white);"
-          oninput="updateSplitTotal()"
-        />
-      </div>
-    `).join('');
-  } else if (splitType === 'percentage') {
-    instructions.textContent = 'Enter percentage for each person (must add up to 100%)';
-    fieldsContainer.innerHTML = groupMembers.map(member => `
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-        <span class="avatar" style="flex-shrink:0">${getInitials(member.name)}</span>
-        <span style="flex:1; font-size:14px; font-weight:500">${member.name}</span>
-        <input
-          type="number"
-          placeholder="0%"
-          data-member-id="${member._id}"
-          data-split-input="percentage"
-          style="width:90px; padding:8px 12px; border:1.5px solid var(--line); border-radius:8px; font-size:14px; outline:none; text-align:right; background:var(--white);"
-          oninput="updateSplitTotal()"
-        />
-      </div>
-    `).join('');
-  }
-
-  totalEl.textContent = '';
-};
-
-// Update running total for split validation
-const updateSplitTotal = () => {
-  const splitType = document.getElementById('splitType').value;
-  const inputs = document.querySelectorAll('[data-split-input]');
-  const totalEl = document.getElementById('splitTotal');
-  const amountInput = document.getElementById('expenseAmount');
-  const totalAmount = parseFloat(amountInput?.value) || 0;
-
-  let runningTotal = 0;
-  inputs.forEach(input => {
-    runningTotal += parseFloat(input.value) || 0;
-  });
-
-  if (splitType === 'exact') {
-    const diff = Math.abs(runningTotal - totalAmount);
-    if (diff < 0.01) {
-      totalEl.textContent = '✓ Amounts add up correctly';
-      totalEl.style.color = 'var(--sage)';
-    } else {
-      totalEl.textContent = `Total: ₹${runningTotal.toFixed(2)} of ₹${totalAmount} (${runningTotal < totalAmount ? 'short by' : 'over by'} ₹${Math.abs(totalAmount - runningTotal).toFixed(2)})`;
-      totalEl.style.color = 'var(--coral)';
-    }
-  } else if (splitType === 'percentage') {
-    if (Math.abs(runningTotal - 100) < 0.01) {
-      totalEl.textContent = '✓ Percentages add up to 100%';
-      totalEl.style.color = 'var(--sage)';
-    } else {
-      totalEl.textContent = `Total: ${runningTotal}% of 100% (${runningTotal < 100 ? 'short by' : 'over by'} ${Math.abs(100 - runningTotal)}%)`;
-      totalEl.style.color = 'var(--coral)';
-    }
-  }
 };
 
 const loadGroup = async () => {
@@ -181,8 +85,6 @@ const loadGroup = async () => {
     }
 
     const group = data.data.group;
-    groupMembers = group.members;
-
     document.title = `${group.name} — Expense Splitter`;
     document.getElementById('groupHeader').innerHTML = `
       <div class="group-hero">
@@ -239,7 +141,6 @@ const loadExpenses = async () => {
             <h4>${expense.description}</h4>
             <p>Paid by <strong>${expense.paidBy.name}</strong> · ${new Date(expense.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
             <span class="cat-badge">${expense.category}</span>
-            <span class="cat-badge" style="margin-left:4px; background:var(--cream-deep)">${expense.splitType} split</span>
           </div>
         </div>
         <div class="expense-row-right">
@@ -362,7 +263,7 @@ const addExpense = async () => {
   const amount = parseFloat(document.getElementById('expenseAmount').value);
   const category = document.getElementById('expenseCategory').value;
   const notes = document.getElementById('expenseNotes').value.trim();
-  const splitType = document.getElementById('splitType').value;
+
   const errEl = document.getElementById('expenseError');
 
   if (!description) {
@@ -376,58 +277,16 @@ const addExpense = async () => {
     return;
   }
 
-  let customSplits = null;
-
-  if (splitType === 'exact') {
-    const inputs = document.querySelectorAll('[data-split-input="exact"]');
-    customSplits = [];
-    let total = 0;
-    inputs.forEach(input => {
-      const val = parseFloat(input.value) || 0;
-      total += val;
-      customSplits.push({
-        userId: input.dataset.memberId,
-        amount: val
-      });
-    });
-    if (Math.abs(total - amount) > 0.5) {
-      errEl.textContent = `Split amounts (₹${total}) must add up to ₹${amount}`;
-      errEl.style.display = 'flex';
-      return;
-    }
-
-  } else if (splitType === 'percentage') {
-    const inputs = document.querySelectorAll('[data-split-input="percentage"]');
-    customSplits = [];
-    let total = 0;
-    inputs.forEach(input => {
-      const val = parseFloat(input.value) || 0;
-      total += val;
-      customSplits.push({
-        userId: input.dataset.memberId,
-        percentage: val
-      });
-    });
-    if (Math.abs(total - 100) > 0.5) {
-      errEl.textContent = `Percentages must add up to 100% (currently ${total}%)`;
-      errEl.style.display = 'flex';
-      return;
-    }
-  }
-
   document.getElementById('addExpenseBtn').disabled = true;
 
   try {
-    const body = { groupId, description, amount, category, notes, splitType };
-    if (customSplits) body.customSplits = customSplits;
-
     const response = await fetch(`${API_URL}/expenses/add`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getToken()}`
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify({ groupId, description, amount, category, notes })
     });
 
     const data = await response.json();
