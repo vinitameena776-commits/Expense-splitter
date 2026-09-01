@@ -3,6 +3,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const sendResponse = require('../utils/apiResponse');
 
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
+
 // REGISTER
 const register = async (req, res) => {
   try {
@@ -97,4 +100,122 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+// FORGOT PASSWORD
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return sendResponse(res, 400, 'Email is required');
+    }
+
+    const user = await User.findOne({
+      email: email.toLowerCase()
+    });
+
+    if (!user) {
+      return sendResponse(res, 404, 'No user found with this email');
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+
+    await user.save();
+
+    const resetUrl =
+      `https://expense-splitter-ccis.onrender.com/reset-password.html?token=${resetToken}`;
+
+    await sendEmail({
+      email: user.email,
+      subject: 'Expense Splitter - Password Reset',
+      html: `
+        <h2>Password Reset</h2>
+        <p>Hello ${user.name},</p>
+        <p>You requested to reset your password.</p>
+        <p>Click the button below to reset it:</p>
+
+        <a href="${resetUrl}"
+           style="
+             display:inline-block;
+             padding:12px 20px;
+             background:#4f46e5;
+             color:white;
+             text-decoration:none;
+             border-radius:6px;
+           ">
+          Reset Password
+        </a>
+
+        <p>This link will expire in 15 minutes.</p>
+        <p>If you did not request this, you can ignore this email.</p>
+      `
+    });
+
+    sendResponse(
+      res,
+      200,
+      'Password reset link sent to your email'
+    );
+
+  } catch (error) {
+    console.error('FORGOT PASSWORD ERROR:', error);
+    sendResponse(res, 500, 'Unable to send reset email');
+  }
+};
+
+
+// RESET PASSWORD
+const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    if (!password || password.length < 6) {
+      return sendResponse(
+        res,
+        400,
+        'Password must be at least 6 characters'
+      );
+    }
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return sendResponse(
+        res,
+        400,
+        'Invalid or expired reset token'
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpire = null;
+
+    await user.save();
+
+    sendResponse(
+      res,
+      200,
+      'Password reset successfully'
+    );
+
+  } catch (error) {
+    console.error('RESET PASSWORD ERROR:', error);
+    sendResponse(res, 500, 'Unable to reset password');
+  }
+};
+
+module.exports = {
+  register,
+  login,
+  forgotPassword,
+  resetPassword
+};

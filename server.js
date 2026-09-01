@@ -18,7 +18,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
-
+app.use(express.static('frontend'));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/groups', groupRoutes);
