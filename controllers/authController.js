@@ -124,8 +124,8 @@ const forgotPassword = async (req, res) => {
 
     await user.save();
 
-    const resetUrl =
-      `https://expense-splitter-ccis.onrender.com/reset-password.html?token=${resetToken}`;
+const resetUrl =
+  `https://expense-splitter-ccis.onrender.com/pages/reset-password.html?token=${resetToken}`;
 
     await sendEmail({
       email: user.email,
